@@ -1,0 +1,28 @@
+services:
+  esus_app:
+    image: esus_app_arch
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ${CONTAINER_NAME}
+    privileged: true
+    networks:
+      esus_network:
+        ipv4_address: ${CONTAINER_IP}
+    ports:
+      - "8080:8080"
+      - "53032:53032"
+    environment:
+      - TZ=America/Porto_Velho
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    restart: unless-stopped
+    command: ["/usr/sbin/init"]
+
+networks:
+  esus_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.0.0.0/16
